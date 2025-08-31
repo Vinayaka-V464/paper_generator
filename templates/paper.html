@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Question Paper - {{ data.course_name }}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        body {
+            -webkit-print-color-adjust: exact;
+            margin: 0;
+            padding: 0;
+            font-family: 'Times New Roman', Times, serif;
+            background-color: #f9f9f9;
+        }
+        .paper-container {
+            width: 210mm;
+            min-height: 297mm;
+            margin: auto;
+            padding: 15mm;
+            box-sizing: border-box;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        .print-button-container {
+            text-align: center;
+            padding: 10px;
+            background-color: #eee;
+        }
+        .print-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        /* --- Header --- */
+        .header-box {
+            border: 1px solid black;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            flex-basis: 15%;
+            text-align: center;
+        }
+        .logo img {
+            max-width: 100px;
+            max-height: 100px;
+        }
+        .college-details {
+            flex-basis: 85%;
+            text-align: center;
+        }
+        .college-name {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .college-details p {
+            margin: 2px 0;
+            font-size: 12px;
+        }
+        /* --- Info Table --- */
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+        .info-table td {
+            border: 1px solid black;
+            padding: 4px 8px;
+        }
+        .info-table .label {
+            font-weight: bold;
+            width: 15%;
+        }
+        .info-table .value {
+            width: 35%;
+        }
+        .exam-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            margin: 15px 0;
+        }
+        /* --- Main Question Table --- */
+        .question-paper-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .question-paper-table th, .question-paper-table td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+            vertical-align: top;
+        }
+        .question-paper-table th {
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        /* --- LAYOUT CHANGE HERE --- */
+        .col-q-no { width: 5%; text-align: center; }
+        .col-question { width: 67%; } /* Increased width for questions */
+        .col-marks { width: 7%; text-align: center; } /* Reduced width */
+        .col-total-marks { width: 7%; text-align: center; } /* Reduced width */
+        .col-co { width: 7%; text-align: center; } /* Reduced width */
+        .col-rbt { width: 7%; text-align: center; } /* Reduced width */
+
+        .sub-question-text {
+            display: flex;
+        }
+        .sub-question-text .letter {
+            padding-right: 10px;
+            font-weight: bold;
+        }
+        .or-divider td {
+            text-align: center;
+            font-weight: bold;
+            padding: 5px;
+        }
+        .section-divider td {
+            border: none;
+            border-top: 2px solid #333;
+            height: 15px;
+        }
+
+        /* --- Bottom Tables & Signatures --- */
+        .page-footer {
+            margin-top: auto; /* Pushes footer to the bottom */
+            padding-top: 20px;
+        }
+        .co-table, .rbt-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+        .co-table td, .co-table th, .rbt-table td, .rbt-table th {
+            border: 1px solid black;
+            padding: 5px;
+        }
+        .co-table th:nth-child(1), .co-table td:nth-child(1) { width: 10%; text-align: center; }
+        .co-table th:nth-child(2), .co-table td:nth-child(2) { width: 75%; }
+        .co-table th:nth-child(3), .co-table td:nth-child(3) { width: 15%; text-align: center; }
+        
+        .rbt-table {
+            margin-top: 10px;
+        }
+
+        .signatures {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .signature-block {
+            text-align: center;
+        }
+        .signature-block img {
+            display: block;
+            margin: auto;
+            max-height: 40px;
+            margin-bottom: 5px;
+        }
+
+        @media print {
+            .print-button-container {
+                display: none;
+            }
+            .paper-container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="print-button-container">
+        <button class="print-button" onclick="window.print()">Print Paper</button>
+    </div>
+
+    <div class="paper-container">
+        <div class="header-box">
+            {% if data.logo_encoded %}
+            <div class="logo">
+                <img src="{{ data.logo_encoded }}" alt="College Logo">
+            </div>
+            {% endif %}
+            <div class="college-details">
+                <div class="college-name">{{ data.college_name }}</div>
+                <p>{{ data.college_address }}</p>
+                <p>Phone No: {{ data.phone_no }} &nbsp;&nbsp; Email: {{ data.email }} &nbsp;&nbsp; Website: {{ data.website }}</p>
+            </div>
+        </div>
+        
+        <div class="exam-title">{{ data.exam_title }}</div>
+
+        <table class="info-table">
+            <tr>
+                <td class="label">Academic Year</td><td class="value">{{ data.academic_year }}</td>
+                <td class="label">Dept.</td><td class="value">{{ data.dept }}</td>
+            </tr>
+            <tr>
+                <td class="label">Program</td><td class="value">{{ data.program }}</td>
+                <td class="label">Date</td><td class="value">{{ data.date }}</td>
+            </tr>
+             <tr>
+                <td class="label">Course Type</td><td class="value">{{ data.course_type }}</td>
+                <td class="label">Duration</td><td class="value">{{ data.duration }}</td>
+            </tr>
+            <tr>
+                <td class="label">Course title</td><td class="value">{{ data.course_name }}</td>
+                <td class="label">Time</td><td class="value">{{ data.time }}</td>
+            </tr>
+             <tr>
+                <td class="label">Course code</td><td class="value">{{ data.course_code }}</td>
+                <td class="label">Max. marks</td><td class="value">{{ data.max_marks }}</td>
+            </tr>
+             <tr>
+                <td class="label">Course Credits</td><td class="value">{{ data.course_credits }}</td>
+                <td colspan="2"></td>
+            </tr>
+        </table>
+
+        <table class="question-paper-table">
+            <thead>
+                <tr>
+                    <th class="col-q-no">Q. No.</th>
+                    <th class="col-question">Questions</th>
+                    <th class="col-marks">Marks</th>
+                    <th class="col-total-marks">Total Marks</th>
+                    <th class="col-co">COs</th>
+                    <th class="col-rbt">RBT level</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for question in paper_questions %}
+                    {% for sub_q in question.sub_questions %}
+                    <tr>
+                        {% if loop.first %}
+                        <td rowspan=" {{ question.sub_questions|length }} " class="col-q-no">{{ question.number }}.</td>
+                        {% endif %}
+                        
+                        <td class="col-question">
+                             <div class="sub-question-text">
+                                <span class="letter">{{ sub_q.letter }})</span>
+                                <span>{{ sub_q.text }}</span>
+                            </div>
+                        </td>
+                        <td class="col-marks">{{ sub_q.marks }}</td>
+
+                        {% if loop.first %}
+                        <td rowspan=" {{ question.sub_questions|length }} " class="col-total-marks">{{ question.total_marks }}</td>
+                        <td rowspan=" {{ question.sub_questions|length }} " class="col-co">{{ question.main_co | join(', ') }}</td>
+                        <td rowspan=" {{ question.sub_questions|length }} " class="col-rbt">{{ question.main_rbt | join(', ') }}</td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+
+                    {% if loop.index is odd and not loop.last %}
+                    <tr class="or-divider">
+                        <td colspan="6">OR</td>
+                    </tr>
+                    {% elif loop.index is even and not loop.last %}
+                    <tr class="section-divider">
+                        <td colspan="6"></td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="page-footer">
+            <table class="co-table">
+                <thead>
+                    <tr>
+                        <th>CO NO.</th>
+                        <th>At the end of the course, students will be able to...</th>
+                        <th>Marks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for co in co_outcomes %}
+                    <tr>
+                        <td>{{ co.number }}</td>
+                        <td>{{ co.description }}</td>
+                        <td>{{ co.marks }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <table class="rbt-table">
+                 <thead>
+                    <tr>
+                        <th>**Revised Bloom's Taxonomy (RBT) Levels:</th>
+                        <th>Remember (L1)</th>
+                        <th>Understand (L2)</th>
+                        <th>Apply (L3)</th>
+                        <th>Analyze (L4)</th>
+                        <th>Evaluate (L5)</th>
+                        <th>Create (L6)</th>
+                    </tr>
+                </thead>
+                 <tbody>
+                    <tr>
+                        <td><b>Marks</b></td>
+                        <td>{{ rbt_totals.get('L1', '-') }}</td>
+                        <td>{{ rbt_totals.get('L2', '-') }}</td>
+                        <td>{{ rbt_totals.get('L3', '-') }}</td>
+                        <td>{{ rbt_totals.get('L4', '-') }}</td>
+                        <td>{{ rbt_totals.get('L5', '-') }}</td>
+                        <td>{{ rbt_totals.get('L6', '-') }}</td>
+                    </tr>
+                 </tbody>
+            </table>
+
+            <div class="signatures">
+                <div class="signature-block">
+                    {% if data.prepared_by_sig_encoded %}<img src="{{ data.prepared_by_sig_encoded }}" alt="Signature">{% endif %}
+                    <hr>
+                    Prepared by
+                </div>
+                <div class="signature-block">
+                    {% if data.principal_sig_encoded %}<img src="{{ data.principal_sig_encoded }}" alt="Signature">{% endif %}
+                     <hr>
+                    Principal
+                </div>
+                <div class="signature-block">
+                    {% if data.hod_sig_encoded %}<img src="{{ data.hod_sig_encoded }}" alt="Signature">{% endif %}
+                     <hr>
+                    Approved by (HOD)
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

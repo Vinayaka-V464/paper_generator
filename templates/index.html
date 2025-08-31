@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Paper Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #FAFAD2; /* Light Goldenrod Yellow */
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background-color: #FFFFF0; /* Ivory */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #5D4037;
+            border-bottom: 2px solid #D4AC0D;
+            padding-bottom: 10px;
+        }
+        fieldset {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #FFFFFF;
+        }
+        legend {
+            font-weight: bold;
+            color: #826222;
+            padding: 0 10px;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="date"], input[type="number"], select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        input[type="file"] {
+            padding: 5px;
+        }
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #5D4037;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .submit-btn:hover {
+            background-color: #795548;
+        }
+        .question-settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .question-block {
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+        }
+        .question-block h4 {
+            margin-top: 0;
+            color: #5D4037;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Automatic Question Paper Generator</h1>
+        <form action="/generate" method="post" enctype="multipart/form-data">
+            
+            <fieldset>
+                <legend>College & Exam Details</legend>
+                 <div class="form-grid">
+                    <div class="input-group full-width"><label for="college_name">College Name</label><input type="text" id="college_name" name="college_name" value="Gopalan College of Engineering and Management" required></div>
+                    <div class="input-group full-width"><label for="college_address">Address</label><input type="text" id="college_address" name="college_address" value="181/1, 182/1, Sonnenahalli, Hoodi, K.R.Puram, Whitefield, Bangalore, Karnataka - 560 048" required></div>
+                    <div class="input-group"><label for="phone_no">Phone No</label><input type="text" id="phone_no" name="phone_no" value="(080) - 42229748"></div>
+                    <div class="input-group"><label for="email">Email</label><input type="text" id="email" name="email" value="gcem@gopalancolleges.com"></div>
+                    <div class="input-group"><label for="website">Website</label><input type="text" id="website" name="website" value="www.gopalancolleges.com/gcem"></div>
+                </div>
+                <hr>
+                <div class="form-grid">
+                    <div class="input-group full-width"><label for="exam_title">Exam Title</label><input type="text" id="exam_title" name="exam_title" value="Internal Assessment Test - II" required></div>
+                    <div class="input-group"><label for="academic_year">Academic Year</label><input type="text" id="academic_year" name="academic_year" value="2024-25 (EVEN)"></div>
+                    <div class="input-group"><label for="program">Program</label><input type="text" id="program" name="program" value="B.E - CSE"></div>
+                    <div class="input-group"><label for="dept">Department</label><input type="text" id="dept" name="dept" value="Mathematics"></div>
+                    <div class="input-group"><label for="date">Date</label><input type="date" id="date" name="date" value="2025-04-25"></div>
+                    <div class="input-group"><label for="duration">Duration</label><input type="text" id="duration" name="duration" value="90 minute"></div>
+                    <div class="input-group"><label for="time">Time</label><input type="text" id="time" name="time" value="9.30AM-11.00AM"></div>
+                    <div class="input-group"><label for="course_code">Course Code</label><input type="text" id="course_code" name="course_code" value="BCS405A"></div>
+                    <div class="input-group"><label for="course_name">Course Name</label><input type="text" id="course_name" name="course_name" value="Discrete Mathematical Structures"></div>
+                    <div class="input-group"><label for="max_marks">Max. Marks</label><input type="number" id="max_marks" name="max_marks" value="50"></div>
+                    <div class="input-group"><label for="course_credits">Course Credits</label><input type="number" id="course_credits" name="course_credits" value="3"></div>
+                    <div class="input-group"><label for="course_type">Course Type</label><input type="text" id="course_type" name="course_type" value="Analytical"></div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Question Settings</legend>
+                <p>For each question, enter the desired sub-question marks separated by commas (e.g., <code>7,7,6</code> for three sub-questions or <code>10</code> for a single question). The paper will show Q1 OR Q2, Q3 OR Q4, and Q5 OR Q6.</p>
+                <div class="question-settings-grid">
+                    
+                    <div class="question-block">
+                        <h4>Question 1 Settings</h4>
+                        <div class="input-group">
+                            <label for="q1_marks">Enter Sub-question Marks</label>
+                            <input type="text" name="q1_marks" id="q1_marks" value="7,7,6" placeholder="e.g., 7,7,6 or 10,10">
+                        </div>
+                    </div>
+                    
+                    <div class="question-block">
+                        <h4>Question 2 Settings (OR)</h4>
+                        <div class="input-group">
+                            <label for="q2_marks">Enter Sub-question Marks</label>
+                            <input type="text" name="q2_marks" id="q2_marks" value="7,7,6" placeholder="e.g., 7,7,6 or 10,10">
+                        </div>
+                    </div>
+
+                    <div class="question-block">
+                        <h4>Question 3 Settings</h4>
+                        <div class="input-group">
+                            <label for="q3_marks">Enter Sub-question Marks</label>
+                             <input type="text" name="q3_marks" id="q3_marks" value="6,6,8" placeholder="e.g., 7,7,6 or 10,10">
+                        </div>
+                    </div>
+                    
+                    <div class="question-block">
+                        <h4>Question 4 Settings (OR)</h4>
+                        <div class="input-group">
+                            <label for="q4_marks">Enter Sub-question Marks</label>
+                            <input type="text" name="q4_marks" id="q4_marks" value="10,10" placeholder="e.g., 7,7,6 or 10,10">
+                        </div>
+                    </div>
+
+                    <div class="question-block">
+                        <h4>Question 5 Settings</h4>
+                        <div class="input-group">
+                           <label for="q5_marks">Enter Sub-question Marks</label>
+                           <input type="text" name="q5_marks" id="q5_marks" value="5,5" placeholder="e.g., 5,5 or 10">
+                        </div>
+                    </div>
+                    
+                    <div class="question-block">
+                        <h4>Question 6 Settings (OR)</h4>
+                        <div class="input-group">
+                           <label for="q6_marks">Enter Sub-question Marks</label>
+                           <input type="text" name="q6_marks" id="q6_marks" value="10" placeholder="e.g., 5,5 or 10">
+                        </div>
+                    </div>
+
+                </div>
+            </fieldset>
+            
+            <fieldset>
+                <legend>File Uploads</legend>
+                <div class="form-grid">
+                    <div class="input-group"><label for="question_pdf">Question Bank (PDF)</label><input type="file" id="question_pdf" name="question_pdf" accept=".pdf" required></div>
+                    <div class="input-group"><label for="logo_image">College Logo</label><input type="file" id="logo_image" name="logo_image" accept="image/*"></div>
+                    <div class="input-group"><label for="prepared_by_sig">"Prepared by" Signature</label><input type="file" id="prepared_by_sig" name="prepared_by_sig" accept="image/*"></div>
+                    <div class="input-group"><label for="principal_sig">"Principal" Signature</label><input type="file" id="principal_sig" name="principal_sig" accept="image/*"></div>
+                    <div class="input-group"><label for="hod_sig">"HOD" Signature</label><input type="file" id="hod_sig" name="hod_sig" accept="image/*"></div>
+                </div>
+            </fieldset>
+
+            <button type="submit" class="submit-btn">Generate Paper</button>
+        </form>
+    </div>
+</body>
+</html>
